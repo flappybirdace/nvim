@@ -8,6 +8,12 @@ require('telescope').setup{
   defaults = {
     -- Default configuration for telescope goes here:
     -- config_key = value,
+
+      layout_strategy = 'vertical',
+--      layout_config = { 
+       -- mirror = true,
+ --     },
+
     mappings = {
       i = {
         -- map actions.which_key to <C-h> (default: <C-/>)
@@ -17,7 +23,9 @@ require('telescope').setup{
       }
     }
   },
+        
   pickers = {
+
     -- Default configuration for builtin pickers goes here:
     -- picker_name = {
     --   picker_config_key = value,
@@ -25,6 +33,9 @@ require('telescope').setup{
     -- }
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
+          colorscheme = {
+                enable_preview = true
+              }
   },
   extensions = {
     -- Your extension configuration goes here:
