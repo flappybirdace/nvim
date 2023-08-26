@@ -1,10 +1,9 @@
-use_coc = true  -- instead of native LSP with plugins
+use_coc_over_lsp = true
+
+
 
 vim.cmd([[
 let mapleader="\<Space>"
-]])
-
-vim.cmd([[
 set nocompatible
 syntax on
 filetype plugin indent on
@@ -20,6 +19,7 @@ set signcolumn=yes:1
 set splitbelow
 set splitright
 tnoremap <C-[> <C-\><C-n>
+nnoremap <leader>e :Explore<CR>
 ]])
 
 
@@ -34,13 +34,6 @@ endif
 ]])
 
 
-vim.cmd([[
-nnoremap <leader>e :Explore<CR>
-]])
-
-
-
-
 
 -- PLUGINS ->
 
@@ -52,8 +45,8 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_
 end
 vim.opt.rtp:prepend(lazypath)
 
-
-lazy_table = {
+-- TODO: use correct lazy settings
+plugin_list = {
   { "nvim-lua/plenary.nvim", lazy = false },
 
 
@@ -83,77 +76,28 @@ lazy_table = {
   { "morhetz/gruvbox", lazy = false},
 }
 
--- TODO: Replace vim-cmp with the faster alternative
--- TODO: use correct lazy settings
--- TODO: fixe use_coc usage
-if (use_coc == false) then
-require("lazy").setup({
-  -- libary
-  { "nvim-lua/plenary.nvim", lazy = false },
-
-
-  -- functional
-  { "nvim-telescope/telescope.nvim", lazy = false },
-  { "stevearc/overseer.nvim", lazy = false },
-  { "folke/which-key.nvim", lazy = false },
-
-  -- IDE features
-  { "tpope/vim-sleuth", lazy = false }, -- detect text format
-  { "nvim-treesitter/nvim-treesitter", cmd = "TSUpdate", lazy = false}, -- highlighting
-  { "lukas-reineke/indent-blankline.nvim" },
-  { "williamboman/mason.nvim", lazy = false }, -- LSP server installer
-  { "williamboman/mason-lspconfig", lazy = false },
-  { "neovim/nvim-lspconfig", lazy = false }, -- LSP setup configs
-
-  { "hrsh7th/cmp-nvim-lsp", lazy = false }, -- autocompletion UI
-  { "hrsh7th/cmp-buffer", lazy = false },
-  { "hrsh7th/cmp-path", lazy = false },
-  { "hrsh7th/cmp-cmdline", lazy = false },
-  { "hrsh7th/nvim-cmp", lazy = false },
-
-
-  -- Cosmetic
-  { "ryanoasis/vim-devicons", lazy = false },
-  { "catppuccin/nvim", lazy = false },
-  { "folke/tokyonight.nvim", lazy = false },
-})
+if (use_coc_over_lsp == true) then
+  table.insert(plugin_list, { "neaclide/coc.nvim", branch = 'release'})
 else
-require("lazy").setup({
-  -- libary
-  { "nvim-lua/plenary.nvim", lazy = false },
-
-
-  -- functional
-  { "nvim-telescope/telescope.nvim", lazy = false },
-  { "stevearc/overseer.nvim", lazy = false },
-  { "folke/which-key.nvim", lazy = false },
-  { "vim-airline/vim-airline", lazy = false},
-
-  -- IDE features
-  { "tpope/vim-sleuth", lazy = false }, -- detect text format
-  { "nvim-treesitter/nvim-treesitter", cmd = "TSUpdate", lazy = false}, -- highlighting
-  { "lukas-reineke/indent-blankline.nvim" },
- 
-  { "neoclide/coc.nvim", branch = 'release'},
-
-  { "hrsh7th/cmp-buffer", lazy = false },
-  { "hrsh7th/cmp-path", lazy = false },
-  { "hrsh7th/cmp-cmdline", lazy = false },
-  { "hrsh7th/nvim-cmp", lazy = false },
-
-
-  -- Cosmetic
-  { "ryanoasis/vim-devicons", lazy = false },
-  { "catppuccin/nvim", lazy = false },
-  { "folke/tokyonight.nvim", lazy = false },
-  { "morhetz/gruvbox", lazy = false},
-})
+  table.insert(plugin_list,  { "williamboman/mason.nvim", lazy = false } ) -- LSP server installer
+  table.insert(plugin_list,  { "williamboman/mason-lspconfig", lazy = false })
+-- TODO: Replace vim-cmp with the faster alternative
+  table.insert(plugin_list,  { "neovim/nvim-lspconfig", lazy = false }) -- LSP setup configs
+  table.insert(plugin_list,  { "hrsh7th/cmp-nvim-lsp", lazy = false }) -- autocompletion UI
+  table.insert(plugin_list,  { "hrsh7th/cmp-buffer", lazy = false })
+  table.insert(plugin_list,  { "hrsh7th/cmp-path", lazy = false })
+  table.insert(plugin_list,  { "hrsh7th/cmp-cmdline", lazy = false })
+  table.insert(plugin_list,  { "hrsh7th/nvim-cmp", lazy = false })
 end
+
+require("lazy").setup(plugin_list)
+
+
 
 require('plugin_configs/treesitter')
 require('plugin_configs/cmp')
 
-if (use_coc == true) then
+if (use_coc_over_lsp == true) then
   require('plugin_configs/coc')
 else
   require('plugin_configs/mason')
@@ -168,7 +112,6 @@ require('plugin_configs/overseer')
 require('overseer_configs/init')
 
 -- <- PLUGINS
-
 
 
 
