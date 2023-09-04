@@ -1,5 +1,6 @@
 {
   "Lua.diagnostics.globals": [
-    "lazy_table"
+    "lazy_table",
+    "vim"
   ]
 }

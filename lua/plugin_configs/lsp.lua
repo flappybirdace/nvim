@@ -60,3 +60,9 @@ require'lspconfig'.omnisharp.setup{
     analyze_open_documents_only = false,
 }
 
+
+vim.diagnostic.config(
+	{virtual_text = {
+		severity = vim.diagnostic.severity.ERROR
+	}}
+)
