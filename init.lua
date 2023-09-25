@@ -24,7 +24,7 @@ set foldexpr=nvim_treesitter#foldexpr()
 set signcolumn=yes:1
 set splitbelow
 set splitright
-nnoremap <leader>e :Explore<CR>
+nnoremap <leader>n :Explore<CR>
 nnoremap <leader>w <C-w>
 
 tnoremap <C-[> <C-\><C-n>
@@ -57,11 +57,24 @@ vim.opt.rtp:prepend(lazypath)
 plugin_list = {
   { "nvim-lua/plenary.nvim", lazy = false },
 
-
   -- functional
 
-    { "nvim-telescope/telescope.nvim", lazy = false },
+  { "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup {}
+      vim.cmd([[nnoremap <leader>e :NvimTreeToggle<CR>]])
+    end,
+  },
+
+  { "nvim-telescope/telescope.nvim", lazy = false },
+
   { "folke/which-key.nvim", lazy = false },
+
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
@@ -73,31 +86,74 @@ plugin_list = {
 
   -- IDE features
   { "stevearc/overseer.nvim", lazy = false },
+
   { "tpope/vim-sleuth", lazy = false }, -- detect text format
+
   { "nvim-treesitter/nvim-treesitter", cmd = "TSUpdate", lazy = false}, -- highlighting
+
   { "lukas-reineke/indent-blankline.nvim" },
+
   { "iamcco/markdown-preview.nvim", build =  "call mkdp#util#install()"},
 
 --  { "neoclide/coc.nvim", branch = 'release'},
 
   { "hrsh7th/cmp-buffer", lazy = false },
+
   { "hrsh7th/cmp-path", lazy = false },
+
   { "hrsh7th/cmp-cmdline", lazy = false },
+
   { "hrsh7th/nvim-cmp", lazy = false },
 
 
   -- Cosmetic
+  --
   { "ryanoasis/vim-devicons", lazy = false },
+
+
   -- Colorschemes
+  --
   { "catppuccin/nvim", lazy = false },
+
   { "folke/tokyonight.nvim", lazy = false },
+
   { "morhetz/gruvbox", lazy = false},
+
   { "rebelot/kanagawa.nvim", lazy = false},
+
   { "bluz71/vim-moonfly-colors", lazy = false},
+
   { "nanotech/jellybeans.vim", lazy = false},
+
   { "noahfrederick/vim-hemisu", lazy = false},
+
   { "fneu/breezy", lazy = false},
+
   { "Jorengarenar/vim-darkness", lazy = false},
+
+
+  -- Other
+  --
+  {
+    "nvim-neorg/neorg",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {}, -- Loads default behaviour
+          ["core.concealer"] = {}, -- Adds pretty icons to your documents
+          ["core.dirman"] = { -- Manages Neorg workspaces
+            config = {
+              workspaces = {
+                --notes = "~/notes",
+              },
+            },
+          },
+        },
+      }
+    end,
+  },
 }
 
 if (use_coc_over_lsp == true) then
@@ -158,5 +214,3 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.cmd([[
 colorscheme kanagawa
 ]])
-
-
